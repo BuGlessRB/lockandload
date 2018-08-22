@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="utf-8" />
+ <script>			  // License: ISC OR GPL-3.0
+(function(D,A,W,T,S,G,Q,L,R,z,t) // lockandload v1.0: minimal AMD-loader
+{ "use strict";			// Copyright (c) 2018, <srb@cuci.nl>
+  if ((t=W.location).href.match(/^http:\/\/[^\/]+\/$/))
+    // Non-intrusive redirect to https from the root of the site
+    t.href=t.href.replace('p','ps');
+  // Integrate GTM support
+  W.dataLayer=[G];
+  // self-contained AMD define()
+  function e(n,d,f,i,j)
+  { if (!f)
+    { f=d; d=0;
+      if (!f) f=n, n=0; else if (Array.isArray(n)) d=n, n=0;
+    }
+    // Support anonymous definitions
+    if (!n)
+    { if (n=D.currentScript) n=n.src;
+      // Kludge for MSIE11
+      else try { throw new Error(0); } catch (e) { n=e.stack; }
+      n=n.match(/(\w+)\.js/)[1];
+    }
+    // Actually run the factory function and resolve dependents
+    function g()
+    { var v=f.apply(0,arguments), a=L[n]||[];
+      delete L[n]; R[n]=v;
+      while (f=a.pop()) f(n,v);
+    }
+    if (j=i=(d=d||['require']).length)
+    { let u=[], k=0;
+      // Resolve a dependency
+      function c(n,v)
+      { u[d.indexOf(n)]=v;
+	// All dependencies resolved, run factory
+	if (++k>=j) g.apply(0,u);
+      }
+      // Iterate through dependencies, resolve if possible, postpone if not
+      while (i--)
+	if ((t=d[i]) in R) c(t,R[t]); else if (L[t]) L[t].push(c); else L[t]=[c];
+      // No dependencies, run factory immediately
+    } else g();
+  }
+  // Internal require only; could be externalised if so desired
+  function E(d,f) { return f ? e(--z,d,f) : R[d]; };
+  //             AMD-loader compliance
+  R.require=E; (W.define=e).amd={};
+  // Optional support for $(...) and $$(...) shortcuts:
+  // $$(on every SPA-page switch)    $(on initial page load)
+  W.$$=function(f) { S.push(f); }; W.$=function(f) { Q.push(f); };
+  // Create "domready" event, it also returns the factory for running
+  // the $$(...) scheduled functions: run it in the SPA after page switches
+  W.onload=function(){ e("domready", function() { return function()
+   { for (var i=S.shift(); i<S.length; S[i++]($(D))); }; }); };
+  // Put the real jquery in place once it has been loaded,
+  // run all $(...)s so far, and run the $$(...) domready list
+  // If you do not need jquery, add the following instead:
+  // E("jquery", function() { return function(x) { x(); };});
+  E(["jquery", "domready"], function($, p)
+   { W.$=$; while (t=Q.shift()) t(); p(); });
+  // Helper function to add new entries at the end of the <head>
+  function n(u,e,a,v,r,k)
+  { k=D.createElement(e); k[a]=v; k[r]=u; D.head.appendChild(k); }
+  // css(): asynchronously load low priority CSS stylesheets
+  function css(u) { n(u,"link","rel","stylesheet","href"); }
+  function J(u,a,b) { n(u,"script",a,b,"src"); }
+  // js(): asynchronously load low priority Javascript files
+  function js(u) { J(u,A,A); }
+  // sjs(): asynchronously load low priority Javascript files sequentially
+  function sjs(u) { J(u,A,0); }
+  // Event when the header has been loaded completely
+  E(["headready"], function()
+  {
+    //t="//cdn.remixml.org/css/";
+    //css(t+"sample.css");		// Low prio CSS
+  });
+  // Event when the DOM has been loaded completely
+  E(["domready"], function()
+  {
+    //t="//cdn.remixml.org/js/";
+    //sjs(t+"sequentialload.js");	// Legacy sequential low prio loads
+    //js(t+"asynchronousload.js");	// Low priority interactive async
+    T(function() {
+      // Low priority non-interactive
+      js("//www.googletagmanager.com/gtm.js?id=GTM-xxxxxx");
+    }, 2048);
+  });
+})(document,"async",window,setTimeout,[0],
+ {"gtm.start":Date.now(), "event":"gtm.js"},[],[],[],0);
+ </script>
+ <script importance="high" src="main.js" async></script>
+ <meta name="viewport" content="width=device-width,initial-scale=1" />
+ <link rel="stylesheet" href="css/main.css" />
+ <title>Lock and load</title>
+ <meta name="description"
+   value="Minimalist AMD-compliant Javascript and CSS loader" />
+ <script>define("headready", Date);</script>
+</head>
+<body>
+ <h1>Minimalist AMD-compliant Javascript and CSS loader</h1>
+ <p>Glorious content</p>
+</body>
+</html>
