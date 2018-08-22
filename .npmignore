@@ -13,9 +13,4 @@ core
 core.*
 .npmrc
 node_modules
-index.html
-index_*.html
-index.php
 *.tgz
-lockandload_*.inc
-lockandload_*.js

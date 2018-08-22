@@ -2,104 +2,196 @@
 <html lang="en">
 <head>
  <meta charset="utf-8" />
+ <!-- The following <script> *must* stay at the top -->
+ <!-- Cut BEGIN for lockandload_master.inc -->
  <script>			  // License: ISC OR GPL-3.0
-(function(D,A,W,T,S,G,Q,L,R,z,t) // lockandload v1.0: minimal AMD-loader
-{ "use strict";			// Copyright (c) 2018, <srb@cuci.nl>
-  if ((t=W.location).href.match(/^http:\/\/[^\/]+\/$/))
-    // Non-intrusive redirect to https from the root of the site
-    t.href=t.href.replace('p','ps');
-  // Integrate GTM support
-  W.dataLayer=[G];
+!function(W,D,U,X,M,S,Q,L,R)	 // lockandload v1.2: boilerplate AMD-loader
+{ "use strict";			// Copyright (c) 2018 <srb@cuci.nl>
+  //
+  // Integrate GTM support to get the timing right
+  //
+  W.dataLayer=[{"gtm.start":Date.now(),event:"gtm.js"}];
+  //
   // self-contained AMD define()
-  function e(n,d,f,i,j)
-  { if (!f)
-    { f=d; d=0;
-      if (!f) f=n, n=0; else if (Array.isArray(n)) d=n, n=0;
+  //
+  function e(n,d,f)
+  { var i,j,t,u=[],k=0;
+    function c(m)
+    //
+    // Substitute dependency by resolved reference
+    //
+    { if (u[d.indexOf(m)]=R[m], ++k>=j)
+	//
+	// All dependencies resolved, run factory exactly once; support
+	// non-function factories; assume exports if the function returns 0
+	//
+	{ j=L[n]||[]; delete L[n]; R[X]=R[n];
+	  R[n]=(typeof f=="function"?f.apply(0,u):f)||R[X];
+	  //
+	  // Resolve dependents
+	  //
+	  while (f=j.pop()) f(n);
+	  //
+	  // Early release of factory function for garbage collection
+	  //
+	}
     }
+    //
+    // Restructure argument ordering
+    //
+    if (!f) if (f=d, d=0, !f) f=n, n=0; else if (Array.isArray(n)) d=n, n=0;
+    //
     // Support anonymous definitions
+    //
     if (!n)
     { if (n=D.currentScript) n=n.src;
-      // Kludge for MSIE11
+      //
+      // Kludge for MSIE10/11, Error.stack is not supported on IE9
+      //
       else try { throw new Error(0); } catch (e) { n=e.stack; }
-      n=n.match(/(\w+)\.js/)[1];
+      n=n.match(/([-\w_]+)\.(?:[-\w_]+\.)*js/)[1];
     }
-    // Actually run the factory function and resolve dependents
-    function g()
-    { var v=f.apply(0,arguments), a=L[n]||[];
-      delete L[n]; R[n]=v;
-      while (f=a.pop()) f(n,v);
-    }
-    if (j=i=(d=d||['require']).length)
-    { let u=[], k=0;
-      // Resolve a dependency
-      function c(n,v)
-      { u[d.indexOf(n)]=v;
-	// All dependencies resolved, run factory
-	if (++k>=j) g.apply(0,u);
+    //
+    // For debugging uncomment the line below if you want to see what names
+    // the modules try to register themselves as:
+    //console.log("define(" + n + ")");
+    //
+    d||(d=[U,X,M]).splice(f.length);
+    if (j=i=d.length)
+      //
+      // Iterate through dependencies, resolve if possible, shortcircuit
+      // for exports or module, postpone otherwise
+      //
+      for (R[X]={}; i--; )
+      { if ((t=d[i])==X||t==M) R[n]=R[X];
+	if (t in R) c(t); else if (L[t]) L[t].push(c); else L[t]=[c];
       }
-      // Iterate through dependencies, resolve if possible, postpone if not
-      while (i--)
-	if ((t=d[i]) in R) c(t,R[t]); else if (L[t]) L[t].push(c); else L[t]=[c];
-      // No dependencies, run factory immediately
-    } else g();
+    //
+    // No dependencies, run factory immediately
+    //
+    else c();
   }
-  // Internal require only; could be externalised if so desired
-  function E(d,f) { return f ? e(--z,d,f) : R[d]; };
-  //             AMD-loader compliance
-  R.require=E; (W.define=e).amd={};
+  function E(d,f) { return f ? e(1,d,f) : R[d]; }
+  //
+  // Internal require only
+  //
+  (R[M]=R)[U]=E;
+  //		AMD-loader compliance
+  (W.define=e).amd={lockandload:E||"v1.1, Copyright (c) 2018 <srb@cuci.nl>"};
+  //
   // Optional support for $(...) and $$(...) shortcuts:
   // $$(on every SPA-page switch)    $(on initial page load)
+  //
   W.$$=function(f) { S.push(f); }; W.$=function(f) { Q.push(f); };
-  // Create "domready" event, it also returns the factory for running
-  // the $$(...) scheduled functions: run it in the SPA after page switches
-  W.onload=function(){ e("domready", function() { return function()
-   { for (var i=S.shift(); i<S.length; S[i++]($(D))); }; }); };
-  // Put the real jquery in place once it has been loaded,
-  // run all $(...)s so far, and run the $$(...) domready list
-  // If you do not need jquery, add the following instead:
-  // E("jquery", function() { return function(x) { x(); };});
-  E(["jquery", "domready"], function($, p)
-   { W.$=$; while (t=Q.shift()) t(); p(); });
-  // Helper function to add new entries at the end of the <head>
-  function n(u,e,a,v,r,k)
-  { k=D.createElement(e); k[a]=v; k[r]=u; D.head.appendChild(k); }
-  // css(): asynchronously load low priority CSS stylesheets
-  function css(u) { n(u,"link","rel","stylesheet","href"); }
-  function J(u,a,b) { n(u,"script",a,b,"src"); }
-  // js(): asynchronously load low priority Javascript files
-  function js(u) { J(u,A,A); }
-  // sjs(): asynchronously load low priority Javascript files sequentially
-  function sjs(u) { J(u,A,0); }
-  // Event when the header has been loaded completely
-  E(["headready"], function()
-  {
-    //t="//cdn.remixml.org/css/";
-    //css(t+"sample.css");		// Low prio CSS
-  });
-  // Event when the DOM has been loaded completely
-  E(["domready"], function()
-  {
-    //t="//cdn.remixml.org/js/";
-    //sjs(t+"sequentialload.js");	// Legacy sequential low prio loads
-    //js(t+"asynchronousload.js");	// Low priority interactive async
-    T(function() {
-      // Low priority non-interactive
-      js("//www.googletagmanager.com/gtm.js?id=GTM-xxxxxx");
-    }, 2048);
-  });
-})(document,"async",window,setTimeout,[0],
- {"gtm.start":Date.now(), "event":"gtm.js"},[],[],[],0);
+  //
+  // Define "domready" dependency, it also returns the factory for running
+  // the $$(...) scheduled functions: run it in the SPA after page switches.
+  // You should run it at least once if you used legacy $(...) code before
+  // jquery has loaded (asynchronously).
+  //
+  W.onload=function(){ e("domready", function() { return function(t,i)
+  { if(S[0]||t==1)
+    { while (i=Q.shift()) i();
+      t=!(t==1?S.shift():t)&&R.jquery?$(D):t;
+      for (i=0; i<S.length; S[i++](t)); } }; }); };
+}(window,document,"require","exports","module",[0],[],{},{});
  </script>
+ <!-- Cut END for lockandload_master.inc -->
+ <!-- All high priority Javascript files go here -->
  <script importance="high" src="main.js" async></script>
  <meta name="viewport" content="width=device-width,initial-scale=1" />
+ <!-- All high priority CSS files go here -->
  <link rel="stylesheet" href="css/main.css" />
  <title>Lock and load</title>
  <meta name="description"
    value="Minimalist AMD-compliant Javascript and CSS loader" />
- <script>define("headready", Date);</script>
+ <!-- This is where the you put all the other tags that go into <head> -->
+ <!-- Cut BEGIN for lockandload_headready.inc -->
+ <script>
+!function(W,D,A,T,e,t)
+{ "use strict";
+  //
+  // Helper function to add new entries at the end of the <head>
+  //
+  function n(u,e,a,v,r,p,k)
+  { k=D.createElement(e); k[a]=v; k[r]=u; D.head.appendChild(k);
+    if(p) k.onload=function() { define(p, 1); }; }
+  //
+  // css(url): asynchronously load low priority CSS stylesheets
+  // css(url, id): same as above, but also fulfill dependency id after
+  //		   the rules have been applied.
+  //
+  function css(u,p) { n(u,"link","rel","stylesheet","href",p); }
+  //
+  // js(url): load Javascript files sequentially in the background
+  // js(url, "async"): load low priority Javascript files asynchronously
+  //
+  function js(u,a) { n(u,"script",A,a,"src"); }
+  /* Cut END for lockandload_headready.inc */
+  /*
+  ** This is your config area.  Customise to taste.
+  **
+  ** Optional headready define, if you want it, uncomment the next line:
+  **define("headready", 1);
+  **
+  ** Add low priority CSS files here.
+  ** High priority CSS should use direct <link> entries instead if you
+  ** do not need to fulfill a custom dependency for those files.
+  ** CSS files you need to fulfill dependency 'id' for, must use scss(id, url)
+  ** instead.
+  **
+  **t="//cdn.remixml.org/css/";
+  **css(t+"blue.css", "bluecssloaded");		// CSS fulfilling dependency
+  **css(t+"sample.css");			// Low prio CSS
+  **
+  ** Add medium priority Javascript files here.
+  ** Typically jquery should be loaded here, if needed:
+  **
+  **define(1, ["domready"], function() {
+  **  js("//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js");
+  **});
+  **
+  ** Executed when the DOM has been loaded completely.
+  ** Typically the place to add remaining low priority Javascript files.
+  ** High priority Javascript files should use direct script entries instead.
+  ** If you do not use jquery, take out the jquery dependency from the line
+  ** below:
+  */
+  define(1, ["domready", "jquery"], function(domready) {
+    /*t="//cdn.remixml.org/js/";
+    **js(t+"sequentialload.js");	// Legacy sequential low prio loads
+    **js(t+"sequentialload2.js");	// Legacy sequential low prio loads
+    **js(t+"sequentialload3.js");	// Legacy sequential low prio loads
+    **js("lastjs.js");			// Fullfill lastjs dependency after
+    **					// all js()s have been processed
+    **js(t+"asynchronousload.js", "async");	// Low priority async
+    */
+    T(function() {
+	/*
+	** Low priority non-interactive
+	*/
+	js("//www.googletagmanager.com/gtm.js?id=GTM-xxxxxx");
+    }, 2048);
+    /*
+    ** Call domready(1) with a one as argument once from the startup scripts.
+    ** Call domready() without arguments from your SPA after that on every
+    ** page refresh.  Calling domready() before domready(1) has been called
+    ** will silently ignore the domready() call.
+    ** You can offer a limited scope for the domready() call by supplying
+    ** an argument as in domready(scope).  The argument will be available
+    ** to the scripts being run.  If you do not provide an argument, they
+    ** will receive $(document) (the jquery whole document object/scope).
+    */
+    domready(1);
+  });
+  /* Cut BEGIN for lockandload_trailer.inc */
+}(window,document,"async",setTimeout);
+ </script>
+ <!-- Cut END for lockandload_trailer.inc -->
+ <!-- The preceding <script> *must* stay at the end of the <head> -->
 </head>
 <body>
  <h1>Minimalist AMD-compliant Javascript and CSS loader</h1>
- <p>Glorious content</p>
+ <p>Your glorious content</p>
 </body>
 </html>
