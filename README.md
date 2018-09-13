@@ -3,14 +3,14 @@
 Lockandload is a minimalist AMD-loader-compatible boilerplate to kickstart
 your website.  It includes special support for single-page-apps.
 
-Gzipped, the essential script content amounts to roughly 1KB of code.
-Without compression it blows up to just under 2KB.  Further minifying this
-code does not result in any significant gains, it would just hinder
-readability.
+Gzipped, the essential script content amounts to roughly 859 bytes of code.
+Without compression it blows up to about 1520 bytes.  Further minifying
+this code does not result in any significant gains (773 vs 859 bytes), it
+would just hinder readability.
 
 ## Features
 
-- Less filling: 1KB of gzipped script content.
+- Less filling: 859 bytes of gzipped script content.
 - Handminified to retain readable and maintainable code.
 - It's so small, it can and should be inlined on your HTML page
   (which is also one of the reasons to handminify it only).
@@ -59,6 +59,10 @@ should create the following file and directory structure:
     - `lockandload_trailer.inc`: The end of the headready-script that lives
        at the end of the `<head>`.
     - `index.php`: PHP boilerplate.
+    - `index_inlined.html`: High performance HTML only boilerplate.
+    - `lockandload_master.js`: For lazy `<script>` loading.
+    - `lockandload_headready.js`: Boilerplate for lazy `<script>` loading.
+    - `index_extern.html`: Lazy HTML only boilerplate.
     - `main.js`: Example SPA (Single Page Application).
 
 ### Using PHP
@@ -71,16 +75,16 @@ webroot; then customise the copied file to taste.
 Look at the PHP boilerplate `node_modules/lockandload/index.php`, and
 translate this to your own scripting language.
 
-### Without serverside scripting easy
+### Without serverside scripting (lazy)
 
 Copy the `node_modules/lockandload/index_extern.html` boilerplate
 file to your webroot; then customise the copied file to taste.
-Copy the `node_modules/lockandload/lockandload_headready.html` file
+Copy the `node_modules/lockandload/lockandload_headready.js` file
 to your javascript directory and customise it taste.  Do not forget
 to change the path of the `script` directive in `index_extern.html`
 to point to the new location of the headready script.
 
-### Without serverside scripting high performance
+### Without serverside scripting (high performance)
 
 Copy the `node_modules/lockandload/index_inlined.html` boilerplate
 file to your webroot; then customise the copied file to taste.
@@ -202,14 +206,19 @@ E.g. in your application, you could use code like this:
 - Sample site that uses lockandload: [Remixml](https://remixml.org/).
 - [Asynchronous Module Definition
    (AMD)](https://github.com/amdjs/amdjs-api/blob/master/AMD.md).
-- Inspired by [Curiosity-Driven's minimal
-   loader](https://curiosity-driven.org/minimal-loader):
-  reducing the featureset of lockandload to that what that loader supports,
-  we end up with 320 bytes for reduced-lockandload and 386 bytes for
-  that loader.
 
 Other loaders:
+- [eeMD](https://github.com/MaxMotovilov/eeMD).
+- [Curiosity-Driven](https://curiosity-driven.org/minimal-loader).
 - [RequireJS](https://requirejs.org/).
 - [curl](https://github.com/cujojs/curl).
 - [Dojo Toolkit](https://dojotoolkit.org/).
 - [lsjs](https://github.com/zazl/lsjs).
+- [amdlite](https://github.com/abadc0de/amdlite).
+- [tinyamd](https://github.com/briancray/tinyamd).
+- [tAMD](https://github.com/jivesoftware/tAMD).
+- [almond](https://github.com/requirejs/almond).
+- [bdLoad](http://bdframework.org/bdLoad/).
+- [yabble](https://github.com/jbrantly/yabble).
+- [PINF](https://github.com/pinf/loader-js).
+- [nodules](https://github.com/kriszyp/nodules).
