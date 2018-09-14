@@ -18,6 +18,8 @@ would just hinder readability.
 - Fully asynchronous script loader: AMD-loader compatible.
 - Supports anonymous define() calls.
 - Supports local require() calls (with one and two arguments, RequireJS-style).
+- Supports require.undef() for hot-reloading scripts.
+- Supports require.load() to load scripts on demand.
 - Supports implicit and explicit ['require', 'exports', 'module'] dependencies.
 - Explicit circular dependencies will silently hang in unresolved state
   (or put differently: do not do that), use 'exports' or 'require' to resolve
