@@ -4,9 +4,9 @@
  <meta charset="utf-8" />
  <!-- The following <script> *must* stay at the top -->
  <!-- Cut BEGIN for lockandload_master.inc -->
- <script>			  // License: ISC OR GPL-3.0
-!function(W,D,X,M,S,Q,L,R)	 // lockandload v2.0: boilerplate AMD-loader
-{ "use strict";			// Copyright (c) 2018 <srb@cuci.nl>
+ <script>		  // License: ISC OR GPL-3.0
+!function(W,D,X,M,L,R)	 // lockandload v2.0: boilerplate AMD-loader
+{ "use strict";		// Copyright (c) 2018 <srb@cuci.nl>
   //
   // Integrate GTM support to get the timing right
   //
@@ -14,7 +14,7 @@
   //
   // self-contained AMD define()
   //
-  function e(n,d,f,j)
+  function E(n,d,f,j)
   { function c(k,i,t)
     { for (i in k)
       //
@@ -64,24 +64,14 @@
     j=1; R[X]={}; c(d=d||["require",X,M].splice(0,f.length||0));
   }
   //		AMD-loader compliance
-  (W.define=e).amd={lockandload:e||"v2.0, Copyright (c) 2018 <srb@cuci.nl>"};
+  (W.define=E).amd={lockandload:E||"v2.0, Copyright (c) 2018 <srb@cuci.nl>"};
   //
   // Optional support for $(...) and $$(...) shortcuts:
   // $$(on every SPA-page switch)    $(on initial page load)
   //
-  W.$$=function(f){ S.push(f); }; W.$=function(f){ Q.push(f); };
-  //
-  // Define "domready" dependency, it also returns the factory for running
-  // the $$(...) scheduled functions: run it in the SPA after page switches.
-  // You should run it at least once if you used legacy $(...) code before
-  // jquery has loaded (asynchronously).
-  //
-  W.onload=function(){ e("domready", function() { return function(t,i)
-  { if(S[0]||t==1)
-    { while (i=Q.shift()) i();
-      t=!(t==1?S.shift():t)&&R.jquery?$(D):t;
-      for (i=0; i<S.length; S[i++](t)); } }; }); };
-}(window,document,"exports","module",[0],[],{},{});
+  E.S=[0]; W.$$=function(f){ E.S.push(f); };
+  E.Q=[]; W.$=function(f){ E.Q.push(f); };
+}(window,document,"exports","module",{},{});
  </script>
  <!-- Cut END for lockandload_master.inc -->
  <!-- All high priority Javascript files go here -->
@@ -95,14 +85,14 @@
  <!-- This is where the you put all the other tags that go into <head> -->
  <!-- Cut BEGIN for lockandload_headready.inc -->
  <script>
-!function(W,D,U,A,T,P,e,t)
+!function(W,D,E,A,T,P,e,t)
 { "use strict";
   //
   // Helper function to add new entries at the end of the <head>
   //
   function n(u,e,a,v,r,p,k)
   { k=D.createElement(e); k[a]=v; k[r]=u; D.head.appendChild(k);
-    if(p) k.onload=function() { define(p, 1); }; }
+    if(p) k.onload=function() { E(p, 1); }; }
   //
   // css(url): asynchronously load low priority CSS stylesheets
   // css(url, id): same as above, but also fulfill dependency id after
@@ -183,15 +173,28 @@
     domready(1);
   });
   /* Cut BEGIN for lockandload_trailer.inc */
-  define(U,["module"], function(R,r)
-    //
-    // Non-global require() only
-    // require.undef(n) to unload a module prior to reloading it
-    // require.load(p) to load a javascript file on demand asynchronously
-    //
-  { R[U]=r=function(d,f) { return f ? define(1,d,f) : R[d]; }
-    r.undef=function(n){ R[n]=0; }; r.load=function(p){ js(P[p]||p, A); }; });
-}(window,document,"require","async",setTimeout,{});
+  //
+  // Non-global require() only
+  // require.undef(n) to unload a module prior to reloading it
+  // require.load(p) to load a javascript file on demand asynchronously
+  //
+  E("require", ["module"], function(R)
+  { function r(d,f) { return f ? E(1,d,f) : R[d]; }
+    r.undef=function(n){ R[n]=0; }; r.load=function(p){ js(P[p]||p, A); };
+    return r; });
+  //
+  // Define "domready" dependency, it also returns the factory for running
+  // the $$(...) scheduled functions: run it in the SPA after page switches.
+  // You should run it at least once if you used legacy $(...) code before
+  // jquery has loaded (asynchronously).
+  //
+  W.onload=function(){ E("domready", ["module"], function(R)
+  { return function(t,i)
+    { if(E.S[0]||t==1)
+      { while (i=E.Q.shift()) i();
+	t=!(t==1?E.S.shift():t)&&R.jquery?$(D):t;
+	for (i=0; i<E.S.length; E.S[i++](t)); } }; }); };
+}(window,document,define,"async",setTimeout,{});
  </script>
  <!-- Cut END for lockandload_trailer.inc -->
  <!-- The preceding <script> *must* stay at the end of the <head> -->

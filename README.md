@@ -152,6 +152,9 @@ are used verbatim in `<link href="url">` or `<script src="url">` tags:
 - `js(url, "async"?)`<br />
    Loads Javascript file, if the second optional argument `"async"` is
    provided, the load will be asynchronous.
+- `jsa(alias, path)`<br />
+   Define aliases for javacsript file paths to be referenced through
+   `require.load(alias)` to load the file on demand.
 
 ### Dealing with jQuery
 In order to support legacy code that uses inline `$(function(){...})` scattered
