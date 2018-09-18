@@ -156,6 +156,8 @@ the npm repository (or after running `npm run prepublish`).
    - `id` declares the module id we are defining.  If omitted, we derive
      a module id from the name of the javascript file we are loading.
    - `dependencies` is an array of module ids this module depends on.
+     If the parameter is missing, a default dependency list of
+     `["require", "exports", "module"]` is supplied.
    - `factory` is the callback function that gets called as soon as
      all dependencies have been loaded.  The factory function gets
      references to all the exported symbols from its dependencies, and
