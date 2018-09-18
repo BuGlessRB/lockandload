@@ -274,9 +274,12 @@ Other loaders:
 - [lsjs](https://github.com/zazl/lsjs).
 - [amdlite](https://github.com/abadc0de/amdlite).
 - [tinyamd](https://github.com/briancray/tinyamd).
+- [CrocoDillon](https://github.com/CrocoDillon/define).
 - [tAMD](https://github.com/jivesoftware/tAMD).
 - [almond](https://github.com/requirejs/almond).
 - [bdLoad](http://bdframework.org/bdLoad/).
 - [yabble](https://github.com/jbrantly/yabble).
 - [PINF](https://github.com/pinf/loader-js).
 - [nodules](https://github.com/kriszyp/nodules).
+- [Liferay](https://github.com/liferay/liferay-amd-loader).
+- [lodJS](https://github.com/yanhaijing/lodjs).
