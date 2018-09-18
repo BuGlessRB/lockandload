@@ -4,9 +4,9 @@
  <meta charset="utf-8" />
  <!-- The following <script> *must* stay at the top -->
  <!-- Cut BEGIN for lockandload_master.inc -->
- <script>		  // License: ISC OR GPL-3.0
-!function(W,D,X,M,L,R)	 // lockandload v2.0: boilerplate AMD-loader
-{ "use strict";		// Copyright (c) 2018 <srb@cuci.nl>
+ <script>			  // License: ISC OR GPL-3.0
+!function(W,D,F,X,M,L,R)	 // lockandload v2.1: boilerplate AMD-loader
+{ "use strict";			// Copyright (c) 2018 <srb@cuci.nl>
   //
   // Integrate GTM support to get the timing right
   //
@@ -61,17 +61,21 @@
     // the modules try to register themselves as:
     //console.log("define(" + n + ")");
     //
-    j=1; R[X]={}; c(d=d||["require",X,M].splice(0,f.length||0));
+    j=1; R[X]={}; c(d=d||[F,X,M].splice(0,f.length||0));
   }
   //		AMD-loader compliance
-  (W.define=E).amd={lockandload:E||"v2.0, Copyright (c) 2018 <srb@cuci.nl>"};
+  (W.define=E).amd={lockandload:E||"v2.1, Copyright (c) 2018 <srb@cuci.nl>"};
+  //
+  // Optional global require() convenience function
+  //
+  W[F]=function(d,f){ E(1,d,f); };
   //
   // Optional support for $(...) and $$(...) shortcuts:
   // $$(on every SPA-page switch)    $(on initial page load)
   //
   E.S=[0]; W.$$=function(f){ E.S.push(f); };
   E.Q=[]; W.$=function(f){ E.Q.push(f); };
-}(window,document,"exports","module",{},{});
+}(window,document,"require","exports","module",{},{});
  </script>
  <!-- Cut END for lockandload_master.inc -->
  <!-- All high priority Javascript files go here -->
@@ -135,7 +139,7 @@
   ** Add medium priority Javascript files here.
   ** Typically jquery should be loaded here, if needed:
   **
-  **define(1, ["domready"], function() {
+  **require(["domready"], function() {
   **  js("//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js");
   **});
   **
@@ -145,7 +149,7 @@
   ** If you do not use jquery, take out the jquery dependency from the line
   ** below:
   */
-  define(1, ["domready", "jquery"], function(domready) {
+  require(["domready", "jquery"], function(domready) {
     /*t="//cdn.remixml.org/js/";
     **js(t+"sequentialload.js");	// Legacy sequential low prio loads
     **js(t+"sequentialload2.js");	// Legacy sequential low prio loads

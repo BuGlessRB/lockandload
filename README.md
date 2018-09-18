@@ -8,6 +8,28 @@ Without compression it blows up to about 1520 bytes.  Further minifying
 this code does not result in any significant gains (773 vs 859 bytes), it
 would just hinder readability.
 
+## Why
+
+After reviewing the javascript-loader landscape, looking for a loader
+that satisfies the following criteria:
+- Small enough to be inlined (to avoid paying an extra request-tax to
+  get the loader onboard).
+- Inlined config file (get rid of a request).
+- Config file in pure javascript (no parsing overhead).
+- Let the browser do the actual loading (browsers are smart these days)
+  of files.
+- Connect all asynchronously loaded modules together.
+- Support for single page apps that include legacy code that
+  uses sprinkled `$(function(){...})` constructs, yet I insist on loading
+  jQuery late and asynchronously to speed things up.
+
+I came to the conclusion that (apparently?) none of the existing loaders
+fit the bill.  So I wrote `lockandload` back in 2014 and used it in
+various internal projects, but decided to open-source
+it now in case others find it useful.  As always, when open-sourcing something,
+actually writing documentation takes most of the time.  The documentation
+can always be improved.  Suggestions are welcome!
+
 ## Features
 
 - Less filling: 859 bytes of gzipped script content.
@@ -131,16 +153,21 @@ the npm repository (or after running `npm run prepublish`).
 - `define(id?, dependencies?, factory)`<br />
    The standard [AMD global
     entrypoint](https://github.com/amdjs/amdjs-api/blob/master/AMD.md).
-   To figure out module ids of all
-   the modules that you are trying to load, uncomment some debugging code
-   in the primary load script and inspect your console-pane in the browser.
+   - `id` declares the module id we are defining.  If omitted, we derive
+     a module id from the name of the javascript file we are loading.
+   - `dependencies` is an array of module ids this module depends on.
+   - `factory` is the callback function that gets called as soon as
+     all dependencies have been loaded.  The factory function gets
+     references to all the exported symbols from its dependencies, and
+     should subsequently return its own symbols it wants to export to
+     other modules.  The factory can be a function or a static object.
 
-   If you are in need of the common global `require(dependencies, factory)`,
-   insert the following code into the loader (preferably in the custom-code
-   section of the secondary headready-script):
-```javascript
-   function require(d, f) { define(1, d, f); }
-```
+- `require(dependencies, callback)`<br />
+   Allows you to load dependencies (an array of module ids) asynchronously,
+   the callback is called
+   as soon as all dependencies have loaded.  Parameters to the callback
+   are references to the dependencies just as in the factory function
+   in `define`.
 
 ### Locally
 In the secondary `lockandload` headready-script; all url arguments
@@ -153,8 +180,32 @@ are used verbatim in `<link href="url">` or `<script src="url">` tags:
    Loads Javascript file, if the second optional argument `"async"` is
    provided, the load will be asynchronous.
 - `jsa(alias, path)`<br />
-   Define aliases for javacsript file paths to be referenced through
+   Define aliases for javascript file paths to be referenced through
    `require.load(alias)` to load the file on demand.
+
+### Standard require module
+
+If you use `"require"` in your dependencylist, you get a reference to the
+internal require-module.  It supports the following functionality:
+- `require(id)`<br />
+   Returns a reference to the exports of module `id`.  Beware:
+   this will not trigger loading that module, if the module is not loaded
+   because it was already in your dependencylist, or if the module is
+   not being requested by other modules, this will return zero.
+   As such, it can be used to find out if a certain module is being loaded
+   at all.
+- `require.undef(id)`<br />
+   Clears the cached module `id` exported symbols list.  This allows the module
+   to be hot-reloaded by a subsequent `require.load()`.  Beware that existing
+   references to the old module are not overwritten.  Any modules using
+   `require(id)` before the `require.load()` will return zero, any modules
+   using `require(id)` after the `require.load()` will return a reference
+   to the exports of the reloaded module.
+- `require.load(file)`<br />
+   Asynchronously loads the referenced javascript file.  To centralise
+   file-location management, it is advisable to use `jsa()` calls in the
+   headready section to declare aliases for javascript files which can
+   be used instead of actual file paths in the `require.load()` calls.
 
 ### Dealing with jQuery
 In order to support legacy code that uses inline `$(function(){...})` scattered
