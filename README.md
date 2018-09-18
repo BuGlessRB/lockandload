@@ -149,13 +149,22 @@ the npm repository (or after running `npm run prepublish`).
 
 ## API
 
+### Module ids
+
+Module ids are short strings that uniquely identify a module.
+In `lockandload` these ids typically do not contain parts of a path.
+If a module id is derived from the javascript filename that is being
+loaded, it will only refer to the final path component without
+`.js` or version extension (i.e. anything after the last `/` and
+before the first `.`).
+
 ### Globally
 - `define(id?, dependencies?, factory)`<br />
    The standard [AMD global
     entrypoint](https://github.com/amdjs/amdjs-api/blob/master/AMD.md).
    - `id` declares the module id we are defining.  If omitted, we derive
      a module id from the name of the javascript file we are loading.
-   - `dependencies` is an array of module ids this module depends on.
+   - `dependencies` is an array of strings of module ids this module depends on.
      If the parameter is missing, a default dependency list of
      `["require", "exports", "module"]` is supplied.
    - `factory` is the callback function that gets called as soon as
@@ -165,8 +174,8 @@ the npm repository (or after running `npm run prepublish`).
      other modules.  The factory can be a function or a static object.
 
 - `require(dependencies, callback)`<br />
-   Allows you to load dependencies (an array of module ids) asynchronously,
-   the callback is called
+   Allows you to load dependencies (an array of strings of module ids)
+   asynchronously, the callback is called
    as soon as all dependencies have loaded.  Parameters to the callback
    are references to the dependencies just as in the factory function
    in `define`.

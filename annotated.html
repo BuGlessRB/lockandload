@@ -96,23 +96,23 @@
   //
   function n(u,e,a,v,r,p,k)
   { k=D.createElement(e); k[a]=v; k[r]=u; D.head.appendChild(k);
-    if(p) k.onload=function() { E(p, 1); }; }
+    if(p) k.onload=function(){ E(p, 1); }; }
   //
   // css(url): asynchronously load low priority CSS stylesheets
   // css(url, id): same as above, but also fulfill dependency id after
   //		   the rules have been applied.
   //
-  function css(u,p) { n(u,"link","rel","stylesheet","href",p); }
+  function css(u,p){ n(u,"link","rel","stylesheet","href",p); }
   //
   // js(url): load Javascript files sequentially in the background
   // js(url, "async"): load low priority Javascript files asynchronously
   //
-  function js(u,a) { n(u,"script",A,a,"src"); }
+  function js(u,a){ n(u,"script",A,a,"src"); }
   //
   // jsa(alias, path); define aliases for javascript file paths
   //  to be referenced through require.load(alias) to load the file on demand
   //
-  function jsa(a,p) { P[a]=p; }
+  function jsa(a,p){ P[a]=p; }
   /* Cut END for lockandload_headready.inc */
   /*
   ** This is your config area.  Customise to taste.
@@ -183,7 +183,7 @@
   // require.load(p) to load a javascript file on demand asynchronously
   //
   E("require", ["module"], function(R)
-  { function r(d,f) { return f ? E(1,d,f) : R[d]; }
+  { function r(d,f){ return f?E(1,d,f):R[d]; }
     r.undef=function(n){ R[n]=0; }; r.load=function(p){ js(P[p]||p, A); };
     return r; });
   //
