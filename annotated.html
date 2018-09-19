@@ -15,21 +15,17 @@
   // self-contained AMD define()
   //
   function E(n,d,f,j)
-  { function c(k,i,t)
-    { for (i in k)
+  { function c(k,i)
       //
-      // Iterate through dependencies, shortcircuit
-      // for exports or module, postpone unresolved
+      // Iterate through dependencies, count and postpone unresolved
       //
-      { if ((t=k[i])==X||t==M) R[n]=R[X];
-	j+=(!(t in R)&&(L[t]||(L[t]=[])).push(c));
-      }
-      if (!--j)
+    { for (i in k) if (L[i=k[i]]||!R[i]) j++, (L[i]=L[i]||[]).push(c);
       //
       // All dependencies resolved, run factory exactly once; support
       // non-function factories; assume exports if the function returns 0
       //
-      { R[X]=R[n]; for (t in d) d[t]=R[d[t]];
+      if (!--j)
+      { R[X]=R[n]; for (i in d) d[i]=R[d[i]];
 	R[n]=(typeof f=="function"?f.apply(0,d):f)||R[X];
 	d=L[n]||[]; delete L[n];
 	//
@@ -61,7 +57,7 @@
     // the modules try to register themselves as:
     //console.log("define(" + n + ")");
     //
-    j=1; R[X]={}; c(d=d||[F,X,M]);
+    j=1; R[n]={}; L[n]=L[n]||[]; c(d=d||[F,X,M]);
   }
   //		AMD-loader compliance
   (W.define=E).amd={lockandload:E||"v2.1, Copyright (c) 2018 <srb@cuci.nl>"};
@@ -89,25 +85,29 @@
  <!-- This is where the you put all the other tags that go into <head> -->
  <!-- Cut BEGIN for lockandload_headready.inc -->
  <script>
-!function(W,D,E,A,T,P,e,t)
+//
+// Provide local shortcuts to W=window, D=document, E=define
+// Declare a housekeeping variable P to store declared jsa() aliases.
+//
+!function(W,D,E,P)
 { "use strict";
   //
   // Helper function to add new entries at the end of the <head>
   //
-  function n(u,e,a,v,r,p,k)
-  { k=D.createElement(e); k[a]=v; k[r]=u; D.head.appendChild(k);
-    if(p) k.onload=function(){ E(p, 1); }; }
+  function n(e,a,v,r,u,p,k)
+  { k=D.createElement(e); if(p) k.onload=function(){ E(p, 1); };
+    k[a]=v; k[r]=u; D.head.appendChild(k); }
   //
   // css(url): asynchronously load low priority CSS stylesheets
   // css(url, id): same as above, but also fulfill dependency id after
   //		   the rules have been applied.
   //
-  function css(u,p){ n(u,"link","rel","stylesheet","href",p); }
+  function css(u,p){ n("link","rel","stylesheet","href",u,p); }
   //
   // js(url): load Javascript files sequentially in the background
   // js(url, "async"): load low priority Javascript files asynchronously
   //
-  function js(u,a){ n(u,"script",A,a,"src"); }
+  function js(u,a){ n("script","async",a,"src",u); }
   //
   // jsa(alias, path); define aliases for javascript file paths
   //  to be referenced through require.load(alias) to load the file on demand
@@ -115,7 +115,7 @@
   function jsa(a,p){ P[a]=p; }
   /* Cut END for lockandload_headready.inc */
   /*
-  ** This is your config area.  Customise to taste.
+  ** This is the start of your config area.  Customise to taste.
   **
   ** Define a bunch of pathname aliases to reference javascript files that
   ** shall be loaded through require.load(path) on demand.
@@ -132,7 +132,7 @@
   ** CSS files you need to fulfill dependency 'id' for, must use scss(id, url)
   ** instead.
   **
-  **t="//cdn.remixml.org/css/";
+  **var t="//cdn.remixml.org/css/";
   **css(t+"blue.css", "bluecssloaded");		// CSS fulfilling dependency
   **css(t+"sample.css");			// Low prio CSS
   **
@@ -150,7 +150,7 @@
   ** below:
   */
   require(["domready", "jquery"], function(domready) {
-    /*t="//cdn.remixml.org/js/";
+    /*var t="//cdn.remixml.org/js/";
     **js(t+"sequentialload.js");	// Legacy sequential low prio loads
     **js(t+"sequentialload2.js");	// Legacy sequential low prio loads
     **js(t+"sequentialload3.js");	// Legacy sequential low prio loads
@@ -158,7 +158,7 @@
     **					// all js()s have been processed
     **js(t+"asynchronousload.js", "async");	// Low priority async
     */
-    T(function() {
+    setTimeout(function() {
 	/*
 	** Low priority non-interactive
 	*/
@@ -176,6 +176,10 @@
     */
     domready(1);
   });
+  /*
+  ** This is where your config area ends.  Do not edit until after the
+  ** end of the script
+  */
   /* Cut BEGIN for lockandload_trailer.inc */
   //
   // Non-global require() only
@@ -183,9 +187,8 @@
   // require.load(p) to load a javascript file on demand asynchronously
   //
   E("require", ["module"], function(R)
-  { function r(d,f){ return f?E(1,d,f):R[d]; }
-    r.undef=function(n){ R[n]=0; }; r.load=function(p){ js(P[p]||p, A); };
-    return r; });
+  { function r(d,f){ return f?E(1,d,f):R[d]; } r.undef=function(n){ R[n]=0; };
+    r.load=function(p){ js(P[p]||p, 1); }; return r; });
   //
   // Define "domready" dependency, it also returns the factory for running
   // the $$(...) scheduled functions: run it in the SPA after page switches.
@@ -198,7 +201,7 @@
       { while (i=E.Q.shift()) i();
 	t=!(t==1?E.S.shift():t)&&R.jquery?$(D):t;
 	for (i=0; i<E.S.length; E.S[i++](t)); } }; }); };
-}(window,document,define,"async",setTimeout,{});
+}(window,document,define,{});
  </script>
  <!-- Cut END for lockandload_trailer.inc -->
  <!-- The preceding <script> *must* stay at the end of the <head> -->
