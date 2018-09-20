@@ -82,9 +82,13 @@ should create the following file and directory structure:
        lives at the end of the `<head>`.
     - `lockandload_trailer.inc`: The end of the headready-script that lives
        at the end of the `<head>`.
+    - `lockandload_master_debug.inc`: Alternate debugging version of
+       `lockandload_master.inc`.
     - `index.php`: PHP boilerplate.
     - `index_inlined.html`: High performance HTML only boilerplate.
     - `lockandload_master.js`: For lazy `<script>` loading.
+    - `lockandload_master_debug.js`: Alternate debugging version of
+       `lockandload_master.js`.
     - `lockandload_headready.js`: Boilerplate for lazy `<script>` loading.
     - `index_extern.html`: Lazy HTML only boilerplate.
     - `main.js`: Example SPA (Single Page Application).

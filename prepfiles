@@ -1,41 +1,44 @@
 #!/bin/sh
 
+stripdebug='/^[	 ]*\/\/ DEBUG_START/,/^[	 ]*\/\/ DEBUG_END/ d'
 stripcomments='/^[	 ]*\/\// d'
 
-sed -e "$stripcomments"'
+sed -e "$tripdebug;$stripcomments"'
      /Cut [BE][A-Z]* for .*\.inc/ d' <annotated.html >index_inlined.html
-sed -e "$stripcomments"'
+sed -e "$tripdebug;$stripcomments"'
      s/^\(.* Cut BEGIN for \(.*\)\.inc\)/'\
 ' <script src="node_modules\/lockandload\/\2.js"><\/script>\
 \1/g' <annotated.html |
  sed -e '/ Cut BEGIN for .*master\.inc/,/ Cut END for .*master\.inc/ d
          / Cut BEGIN for .*headready\.inc/,/ Cut END for .*trailer\.inc/ d' \
          >index_extern.html
-sed -e "$stripcomments"'
+sed -e "$tripdebug;$stripcomments"'
      s/^\(.* Cut BEGIN for \(.*\.inc\)\)/'\
 ' <?php include("node_modules\/lockandload\/\2"); ?>\
 \1/g' <annotated.html |
  sed -e '/ Cut BEGIN for .*\.inc/,/ Cut END for .*\.inc/ d' >index.php
 
 carveinc()
-{ sed -e "$stripcomments
-    1,/BEGIN for lockandload_$1/ d
-    /END for lockandload_$1/,\$ d" <annotated.html >lockandload_$1.inc
+{ sed -e "$1$stripcomments
+    1,/BEGIN for lockandload_$2/ d
+    /END for lockandload_$2/,\$ d" <annotated.html >lockandload_$2$3.inc
 }
 
 carvejs()
-{ sed -e "$stripcomments
-    1,/BEGIN for lockandload_$1/ d
+{ sed -e "$1$stripcomments
+    1,/BEGIN for lockandload_$2/ d
     /^ <\/*script>$/ d
     s/^ <script>/	/
-    /END for lockandload_$2/,\$ d
+    /END for lockandload_$3/,\$ d
     /Cut [A-Z]* for lockandload_/ d
-    " <annotated.html >lockandload_$1.js
+    " <annotated.html >lockandload_$2$4.js
 }
 
-carveinc master
-carveinc headready
-carveinc trailer
+carveinc "" master _debug
+carveinc "$stripdebug;" master
+carveinc "$stripdebug;" headready
+carveinc "$stripdebug;" trailer
 
-carvejs master master
-carvejs headready trailer
+carvejs "" master master _debug
+carvejs "$stripdebug;" master master
+carvejs "$stripdebug;" headready trailer
