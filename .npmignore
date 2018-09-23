@@ -14,3 +14,4 @@ core.*
 .npmrc
 node_modules
 *.tgz
+docs
