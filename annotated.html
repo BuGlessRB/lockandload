@@ -60,8 +60,8 @@
       // Kludge for MSIE10/11, Error.stack is not supported on IE9
       //
       else try { throw new Error(0); } catch (e) { n=e.stack; }
-      n=n.match(
-	/([-\w_]+(?:\.[-\w_]+)*)(?<!\.min)\.(?:min\.)?js(?:[^\w]|$)/)[1];
+      n=n.match(/([-\w_]+(?:\.[-\w_]+)*)\.js(?:[^\w]|$)/)[1];
+      if (j=n.match(/(.*)\.min$/)) n=j[1];
     }
     // DEBUG_START
     if (n === 1)
