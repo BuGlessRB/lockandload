@@ -153,7 +153,7 @@
   **css(t+"sample.css");			// Low prio CSS
   **
   ** Add medium priority Javascript files here.
-  ** Typically jquery should be loaded here, if needed:
+  ** Typically jQuery should be loaded here, if needed:
   **
   **require(["domready"], function() {
   **  js("//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js");
@@ -162,10 +162,10 @@
   ** Executed when the DOM has been loaded completely.
   ** Typically the place to add remaining low priority Javascript files.
   ** High priority Javascript files should use direct script entries instead.
-  ** If you do not use jquery, take out the jquery dependency from the line
+  ** If you do not use jQuery, take out the jQuery dependency from the line
   ** below:
   */
-  require(["domready", "jquery"], function(domready) {
+  require(["domready", "jQuery"], function(domready) {
     /*var t="//cdn.remixml.org/js/";
     **js(t+"sequentialload.js");	// Legacy sequential low prio loads
     **js(t+"sequentialload2.js");	// Legacy sequential low prio loads
@@ -188,7 +188,7 @@
     ** You can offer a limited scope for the domready() call by supplying
     ** an argument as in domready(scope).  The argument will be available
     ** to the scripts being run.  If you do not provide an argument, they
-    ** will receive $(document) (the jquery whole document object/scope).
+    ** will receive $(document) (the jQuery whole document object/scope).
     */
     domready(1);
   });
@@ -197,6 +197,12 @@
   ** end of the script
   */
   /* Cut BEGIN for lockandload_trailer.inc */
+  //
+  // Use the "jQuery" dependency instead of "jquery" to avoid a race
+  // for an undefined W.$
+  //
+  E("jQuery", ["jquery"], function($, i)
+  { W.jQuery=W.$=$; while (i=E.Q.shift()) $(i); return $; });
   //
   // Non-global require() only
   // require.undef(n) to unload a module prior to reloading it
@@ -208,14 +214,11 @@
   //
   // Define "domready" dependency, it also returns the factory for running
   // the $$(...) scheduled functions: run it in the SPA after page switches.
-  // You should run it at least once if you used legacy $(...) code before
-  // jquery has loaded (asynchronously).
   //
   W.onload=function(){ E("domready", ["module"], function(R)
   { return function(t,i)
     { if(E.S[0]||t==1)
-      { while (i=E.Q.shift()) i();
-	t=!(t==1?E.S.shift():t)&&R.jquery?$(D):t;
+      { t=!(t==1?E.S.shift():t)&&R.jquery?$(D):t;
 	for (i=0; i<E.S.length; E.S[i++](t)); } }; }); };
 }(window,document,define,{});
  </script>

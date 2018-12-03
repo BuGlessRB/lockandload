@@ -54,7 +54,7 @@ can always be improved.  Suggestions are welcome!
 - Both high and low priority asynchronous loading of Javascript and CSS files.
 - Leverages native browser speed for high priority loading (by getting out
   of the way).
-- Legacy support for $(...) jquery riddled synchronous code.
+- Legacy support for $(...) jQuery riddled synchronous code.
 - Legacy support for loading synchronous Javascript.
 - Single-page-app support using $$(...) page refresh callbacks.
 - Supports IE10 and up and all other webbrowsers.
@@ -228,9 +228,8 @@ throughout pages, this loader allows you to use that construct even before
 the jQuery library has been loaded,
 and thus enables you to load jQuery in an asynchronous and non-blocking fashion.
 
-The standard headready-script contains a dependency on `domready` and
-`jquery`  which finally runs `domready(1)` which will run all the
-registered delayed functions the first time.
+N.B. Use the `jQuery` dependency instead of plain `jquery` to avoid a race
+for an undefined `window.$` object.
 
 ### SPA (Single Page App) support
 To ease SPA development, the loader defines a
