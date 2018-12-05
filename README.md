@@ -191,9 +191,11 @@ are used verbatim in `<link href="url">` or `<script src="url">` tags:
    Loads low priority ordered css files asynchronously;
    after the stylesheet has been applied, it fulfills the optional
    `id` dependency.
-- `js(url, "async"?)`<br />
-   Loads Javascript file, if the second optional argument `"async"` is
-   provided, the load will be asynchronous.
+- `js(url, "async"?, noCORS?)`<br />
+   Loads Javascript file.  If the second optional argument `"async"` is
+   provided, the load will be asynchronous.  If the third optional
+   argument is true, the script will be loaded without `crossOrigin`
+   parameter (typically needed to load GTM).
 - `jsa(alias, path)`<br />
    Define aliases for javascript file paths to be referenced through
    `require.load(alias)` to load the file on demand.
@@ -277,7 +279,7 @@ E.g. in your application, you could use code like this:
 - [Asynchronous Module Definition
    (AMD)](https://github.com/amdjs/amdjs-api/blob/master/AMD.md).
 
-Other loaders:
+Other AMD-loaders:
 - [eeMD](https://github.com/MaxMotovilov/eeMD).
 - [Curiosity-Driven](https://curiosity-driven.org/minimal-loader).
 - [RequireJS](https://requirejs.org/).

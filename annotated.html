@@ -110,9 +110,9 @@
   //
   // Helper function to add new entries at the end of the <head>
   //
-  function n(e,a,v,r,u,p,k)
+  function n(e,a,v,r,u,p,x,k)
   { k=D.createElement(e); if(p) k.onload=function(){ E(p, 1); };
-    k[a]=v; k[r]=u; k.crossOrigin=""; D.head.appendChild(k); }
+    k[a]=v; k[r]=u; x||(k.crossOrigin=""); D.head.appendChild(k); }
   //
   // css(url): asynchronously load low priority CSS stylesheets
   // css(url, id): same as above, but also fulfill dependency id after
@@ -122,8 +122,9 @@
   //
   // js(url): load Javascript files sequentially in the background
   // js(url, "async"): load low priority Javascript files asynchronously
+  // js(url, "async", 1): like above, but without CORS (e.g. for GTM)
   //
-  function js(u,a){ n("script","async",a,"src",u); }
+  function js(u,a,x){ n("script","async",a,"src",u,0,x); }
   //
   // jsa(alias, path); define aliases for javascript file paths
   //  to be referenced through require.load(alias) to load the file on demand
@@ -178,7 +179,7 @@
 	/*
 	** Low priority non-interactive
 	*/
-	js("//www.googletagmanager.com/gtm.js?id=GTM-xxxxxx");
+	js("//www.googletagmanager.com/gtm.js?id=GTM-xxxxxx", "async", 1);
     }, 2048);
     /*
     ** Call domready(1) with a one as argument once from the startup scripts.
