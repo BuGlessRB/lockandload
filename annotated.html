@@ -112,7 +112,7 @@
   //
   function n(e,a,v,r,u,p,k)
   { k=D.createElement(e); if(p) k.onload=function(){ E(p, 1); };
-    k[a]=v; k[r]=u; D.head.appendChild(k); }
+    k[a]=v; k[r]=u; k.crossOrigin=""; D.head.appendChild(k); }
   //
   // css(url): asynchronously load low priority CSS stylesheets
   // css(url, id): same as above, but also fulfill dependency id after
