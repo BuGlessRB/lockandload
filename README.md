@@ -43,7 +43,7 @@ can always be improved.  Suggestions are welcome!
 - Supports require.undef() for hot-reloading scripts.
 - Supports require.load() to load scripts on demand.
 - Supports implicit and explicit ['require', 'exports', 'module'] dependencies.
-- Explicit circular dependencies will silently hang in unresolved state
+- Explicit circular dependencies will hang silently in an unresolved state
   (or put differently: do not do that), use 'exports' or 'require' to resolve
   those instead.
 - No extra diagnostic code to minimise code weight and optimise loading speed.
@@ -247,7 +247,7 @@ Convention states that if provided the argument should normally be the jquery
 object referring to the element tree that contains the changes.
 Ultimately you decide what your `$$(function(argument){...})` scheduled
 scripts will use the argument for.  All `domready()`
-calls before `domready(1)` has been run will silently be ignored.
+calls before `domready(1)` has been run will be silently ignored.
 
 E.g. in your application, you could use code like this:
 
