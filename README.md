@@ -32,6 +32,7 @@ can always be improved.  Suggestions are welcome!
 
 ## Features
 
+- Zero dependencies.
 - Less filling: 859 bytes of gzipped script content.
 - Handminified to retain readable and maintainable code.
 - It's so small, it can and should be inlined on your HTML page
