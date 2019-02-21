@@ -1,6 +1,6 @@
 {
   "name": "lockandload",
-  "version": "2.1.22",
+  "version": "2.1.23",
   "description": "Minimalist AMD-compliant Javascript and CSS loader",
   "main": "index.html",
   "browser": "index.html",

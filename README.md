@@ -299,3 +299,5 @@ Other AMD-loaders:
 - [Liferay](https://github.com/liferay/liferay-amd-loader).
 - [lodJS](https://github.com/yanhaijing/lodjs).
 - [esm](https://www.npmjs.com/package/@polymer/esm-amd-loader).
+
+Card-carrying member of the `zerodeps` movement.
