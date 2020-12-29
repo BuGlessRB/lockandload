@@ -54,8 +54,8 @@ can always be improved.  Suggestions are welcome!
   and `domready`.
 - Both high and low priority asynchronous loading of Javascript and CSS files.
 - Leverages native browser speed for high priority loading (by getting out
-  of the way).
-- Legacy support for $(...) jQuery riddled synchronous code.
+  of the way; let `<script>`, HTTP2 and friends do the heavy lifting).
+- Legacy support for `$(...)` jQuery riddled synchronous code.
 - Legacy support for loading synchronous Javascript.
 - Single-page-app support using $$(...) page refresh callbacks.
 - Supports IE10 and up and all other webbrowsers.
