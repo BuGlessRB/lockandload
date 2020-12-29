@@ -292,11 +292,11 @@ Other AMD-loaders:
 - [CrocoDillon](https://github.com/CrocoDillon/define).
 - [tAMD](https://github.com/jivesoftware/tAMD).
 - [almond](https://github.com/requirejs/almond).
-- [bdLoad](http://bdframework.org/bdLoad/).
+- [bdLoad](https://github.com/altoviso/bd-load).
 - [yabble](https://github.com/jbrantly/yabble).
 - [PINF](https://github.com/pinf/loader-js).
 - [nodules](https://github.com/kriszyp/nodules).
-- [Liferay](https://github.com/liferay/liferay-amd-loader).
+- [Liferay](https://www.npmjs.com/package/@liferay/amd-loader).
 - [lodJS](https://github.com/yanhaijing/lodjs).
 - [esm](https://www.npmjs.com/package/@polymer/esm-amd-loader).
 
