@@ -108,6 +108,10 @@
 !function(W,D,E,P)
 { "use strict";
   //
+  // Add gtag() convenience function for gtag.js users
+  //
+  W.gtag=function(){ dataLayer.push(arguments); };
+  //
   // Helper function to add new entries at the end of the <head>
   //
   function n(e,a,v,r,u,p,x,k)
