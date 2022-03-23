@@ -5,8 +5,8 @@
  <!-- The following <script> *must* stay at the top -->
  <!-- Cut BEGIN for lockandload_master.inc -->
  <script>			  // License: ISC OR GPL-3.0
-!function(W,D,F,X,M,L,R)	 // lockandload v2.1: boilerplate AMD-loader
-{ "use strict";			// Copyright (c) 2018 <srb@cuci.nl>
+!function(W,D,F,X,M,L,R)	 // lockandload v2.2: boilerplate AMD-loader
+{ "use strict";			// Copyright (c) 2022 <srb@cuci.nl>
   //
   // Integrate GTM support to get the timing right
   //
@@ -85,7 +85,7 @@
   // Optional support for $(...) and $$(...) shortcuts:
   // $$(on every SPA-page switch)    $(on initial page load)
   //
-  E.S=[0]; W.$$=function(f){ E.S.push(f); };
+  E.S=[0]; W.$$=function(f){ E.S.push(f); E.S[0]&&f(1); };
   E.Q=[]; W.$=function(f){ E.Q.push(f); };
 }(window,document,"require","exports","module",{},{});
  </script>
