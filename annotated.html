@@ -5,89 +5,89 @@
  <!-- The following <script> *must* stay at the top -->
  <!-- Cut BEGIN for lockandload_master.inc -->
  <script>			  // License: ISC OR GPL-3.0
-!function(W,D,F,X,M,L,R)	 // lockandload v2.2: boilerplate AMD-loader
+((W,D,F,X,M,L,R)=>		 // lockandload v3.0: boilerplate AMD-loader
 { "use strict";			// Copyright (c) 2022 <srb@cuci.nl>
-  //
-  // Integrate GTM support to get the timing right
-  //
+	   //
+	  // Integrate GTM support to get the timing right
+	 //
   W.dataLayer=[{"gtm.start":Date.now(),event:"gtm.js"}]; R[X]=R[M]=R;
-  //
-  // self-contained AMD define()
-  //
-  // DEBUG_START
+       // DEBUG_START
   var reqcnt = 2;
-  // DEBUG_END
+     // DEBUG_END
+    //
+   // self-contained AMD define()
+  //
   function E(n,d,f,j)
   { function c(k,i)
+	//
+       // Iterate through dependencies, count and postpone unresolved
       //
-      // Iterate through dependencies, count and postpone unresolved
-      //
-    { for (i in k) if (L[i=k[i]]||!R[i]) j++, (L[i]=L[i]||[]).push(c);
-      // DEBUG_START
+    { for (i of k) if (L[i]||!R[i]) j++, (L[i]=L[i]||[]).push(c);
+	       // DEBUG_START
       if (j > 1)
 	console.log("Dependencies left(" + JSON.stringify(n) + ") = " + (j-1));
-      // DEBUG_END
-      //
-      // All dependencies resolved, run factory exactly once; support
-      // non-function factories; assume exports if the function returns 0
-      //
+	    // DEBUG_END
       if (!--j)
+	  //
+	 // All dependencies have been resolved: in situ replacement
+	//
       { R[X]=R[n]; for (i in d) d[i]=R[d[i]];
-	// DEBUG_START
+			     // DEBUG_START
 	console.log("=============== Running(" + JSON.stringify(n) + ")");
-	// DEBUG_END
+			   // DEBUG_END
+			  //
+			 // Run factory exactly once.
+			//  Support non-function factories.
+		       //   Assume "exports" if the factory returns 0
+		      //
 	R[n]=(typeof f=="function"?f.apply(0,d):f)||R[X];
+		    //
+		   // Early release of factory function for garbage collection
+		  //
 	d=L[n]||[]; delete L[n];
-	//
-	// Resolve dependents
-	//
+		//
+	       // Resolve dependents
+	      //
 	while (f=d.pop()) f();
-	//
-	// Early release of factory function for garbage collection
-	//
       }
     }
-    //
-    // Restructure argument ordering
-    //
+	  //
+	 // Restructure argument ordering
+	//
     if (!f) if (f=d, d=0, !f) f=n, n=0; else if (Array.isArray(n)) d=n, n=0;
-    //
-    // Support anonymous definitions
+      //
+     // Support anonymous definitions
     //
     if (!n)
-    { if (n=D.currentScript) n=n.src;
-      //
-      // Kludge for MSIE10/11, Error.stack is not supported on IE9
-      //
-      else try { throw new Error(0); } catch (e) { n=e.stack; }
-      n=n.match(/([-\w_]+(?:\.[-\w_]+)*)\.js(?:[^\w]|$)/)[1];
+    { n=D.currentScript.src.match(/([-\w_]+(?:\.[-\w_]+)*)\.js(?:[^\w]|$)/)[1];
       if (j=n.match(/(.*)\.min$/)) n=j[1];
     }
-    // DEBUG_START
+	    // DEBUG_START
     if (n === 1)
       n = reqcnt++;
     console.log("define(" + JSON.stringify(n) + "," + JSON.stringify(d) + ","
      + (typeof f == "function"?f.toString():JSON.stringify(f))
 	.substr(0, 80).replace(/\s+/g, " ") + ")");
-    // DEBUG_END
-    //
-    // Initialise exports, mark it as unresolved and off to the races
+       // DEBUG_END
+      //
+     // Initialise exports, mark it as unresolved and off to the races
     //
     j=1; R[n]={}; L[n]=L[n]||[]; c(d=d||[F,X,M]);
   }
-  //		AMD-loader compliance
-  (W.define=E).amd={lockandload:E||"v2.2, Copyright (c) 2022 <srb@cuci.nl>"};
+	    // AMD-loader compliance
+  (W.define=E).amd={lockandload:E||"v3.0, Copyright (c) 2022 <srb@cuci.nl>"};
+	  //
+	 // Global require()
+	//
+  W[F]=(d,f)=>f?E(1,d,f):R[d];
+      //
+     // Optional support for $(...) and $$(...) shortcuts:
+    //   $$(on every SPA-page switch)
+   //    $(on initial page load)
   //
-  // Optional global require() convenience function
-  //
-  W[F]=function(d,f){ E(1,d,f); };
-  //
-  // Optional support for $(...) and $$(...) shortcuts:
-  // $$(on every SPA-page switch)    $(on initial page load)
-  //
-  E.S=[0]; W.$$=function(f){ E.S.push(f); E.S[0]&&f(1); };
-  E.Q=[]; W.$=function(f){ E.Q.push(f); };
-}(window,document,"require","exports","module",{},{});
+  E.S=[0]; W.$$=(f)=>(E.S.push(f),E.S[0]&&f(1));
+  E.Q=[]; W.$=(f)=>E.Q.push(f);
+})(window,document,"require","exports","module",{},{});
  </script>
  <!-- Cut END for lockandload_master.inc -->
  <!-- All high priority Javascript files go here -->
@@ -101,37 +101,38 @@
  <!-- This is where the you put all the other tags that go into <head> -->
  <!-- Cut BEGIN for lockandload_headready.inc -->
  <script>
+   //
+  // Provide local shortcuts to W=window, D=document, E=define
+ // Declare a housekeeping variable P to store declared jsa() aliases.
 //
-// Provide local shortcuts to W=window, D=document, E=define
-// Declare a housekeeping variable P to store declared jsa() aliases.
-//
-!function(W,D,E,P)
+((W,D,F,E,P)=>
 { "use strict";
-  //
-  // Add gtag() convenience function for gtag.js users
+     //
+    // Add gtag() convenience function for gtag.js users.
+   // Cannot use => function declaration syntax due to use of "arguments".
   //
   W.gtag=function(){ dataLayer.push(arguments); };
-  //
-  // Helper function to add new entries at the end of the <head>
+    //
+   // Helper function to add new entries at the end of the <head>
   //
   function n(e,a,v,r,u,p,x,k)
-  { k=D.createElement(e); if(p) k.onload=function(){ E(p, 1); };
+  { k=D.createElement(e); if(p) k.onload=()=>E(p, 1);
     k[a]=v; k[r]=u; x||(k.crossOrigin=""); D.head.appendChild(k); }
-  //
-  // css(url): asynchronously load low priority CSS stylesheets
-  // css(url, id): same as above, but also fulfill dependency id after
-  //		   the rules have been applied.
+      //
+     // css(url): asynchronously load low priority CSS stylesheets
+    //  css(url, id): same as above, but also fulfill dependency id after
+   //		   the rules have been applied.
   //
   function css(u,p){ n("link","rel","stylesheet","href",u,p); }
-  //
-  // js(url): load Javascript files sequentially in the background
-  // js(url, "async"): load low priority Javascript files asynchronously
-  // js(url, "async", 1): like above, but without CORS (e.g. for GTM)
+      //
+     // js(url): load Javascript files sequentially in the background
+    //  js(url, "async"): load low priority Javascript files asynchronously
+   //   js(url, "async", 1): like above, but without CORS (e.g. for GTM)
   //
   function js(u,a,x){ n("script","async",a,"src",u,0,x); }
-  //
-  // jsa(alias, path); define aliases for javascript file paths
-  //  to be referenced through require.load(alias) to load the file on demand
+     //
+    // jsa(alias, path); define aliases for javascript file paths
+   //  to be referenced through require.load(alias) to load the file on demand
   //
   function jsa(a,p){ P[a]=p; }
   /* Cut END for lockandload_headready.inc */
@@ -160,7 +161,7 @@
   ** Add medium priority Javascript files here.
   ** Typically jQuery should be loaded here, if needed:
   **
-  **require(["domready"], function() {
+  **require(["domready"], ()=> {
   **  js("//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js");
   **});
   **
@@ -170,7 +171,7 @@
   ** If you do not use jQuery, take out the jQuery dependency from the line
   ** below:
   */
-  require(["domready", "jQuery"], function(domready) {
+  require(["domready", "jQuery"], (domready)=> {
     /*var t="//cdn.remixml.org/js/";
     **js(t+"sequentialload.js");	// Legacy sequential low prio loads
     **js(t+"sequentialload2.js");	// Legacy sequential low prio loads
@@ -179,7 +180,7 @@
     **					// all js()s have been processed
     **js(t+"asynchronousload.js", "async");	// Low priority async
     */
-    setTimeout(function() {
+    setTimeout(()=> {
 	/*
 	** Low priority non-interactive
 	*/
@@ -202,30 +203,28 @@
   ** end of the script
   */
   /* Cut BEGIN for lockandload_trailer.inc */
+     //
+    // Use the "jQuery" dependency instead of "jquery" to avoid a race
+   // for an undefined W.$
   //
-  // Use the "jQuery" dependency instead of "jquery" to avoid a race
-  // for an undefined W.$
-  //
-  E("jQuery", ["jquery"], function($, i)
+  E("jQuery", ["jquery"], ($, i)=>
   { W.jQuery=W.$=$; while (i=E.Q.shift()) $(i); return $; });
+      //
+     // Non-global require()
+    //  require.undef(n) to unload a module prior to reloading it
+   //   require.load(p) to load a javascript file on demand asynchronously
   //
-  // Non-global require() only
-  // require.undef(n) to unload a module prior to reloading it
-  // require.load(p) to load a javascript file on demand asynchronously
+  E(F, ["module"], (R)=>
+   (W[F].undef=(n)=>R[n]=0, W[F].load=(p)=>js(P[p]||p, 1), W[F]));
+     //
+    // Define "domready" dependency, it also returns the factory for running
+   // the $$(...) scheduled functions: run it in the SPA after page switches.
   //
-  E("require", ["module"], function(R)
-  { function r(d,f){ return f?E(1,d,f):R[d]; } r.undef=function(n){ R[n]=0; };
-    r.load=function(p){ js(P[p]||p, 1); }; return r; });
-  //
-  // Define "domready" dependency, it also returns the factory for running
-  // the $$(...) scheduled functions: run it in the SPA after page switches.
-  //
-  W.onload=function(){ E("domready", ["module"], function(R)
-  { return function(t,i)
+  W.onload=()=>E("domready", ["module"], (R)=> (t,i)=>
     { if(E.S[0]||t==1)
       { t=!(t==1?E.S.shift():t)&&R.jquery?$(D):t;
-	for (i=0; i<E.S.length; E.S[i++](t)); } }; }); };
-}(window,document,define,{});
+	for (i=0; i<E.S.length; E.S[i++](t)); }});
+})(window,document,"require",define,{});
  </script>
  <!-- Cut END for lockandload_trailer.inc -->
  <!-- The preceding <script> *must* stay at the end of the <head> -->
