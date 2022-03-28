@@ -204,7 +204,8 @@ are used verbatim in `<link href="url">` or `<script src="url">` tags:
 ### Standard require module
 
 If you use `"require"` in your dependencylist, you get a reference to the
-internal require-module.  It supports the following functionality:
+internal require-module (which behaves identical to the global `require()`).
+It supports the following functionality:
 - `require(id)`<br />
    Returns a reference to the exports of module `id`.  Beware:
    this will not trigger loading that module, if the module is not loaded
