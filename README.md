@@ -3,9 +3,9 @@
 Lockandload is a minimalist AMD-loader-compatible boilerplate to kickstart
 your website.  It includes special support for single-page-apps.
 
-Gzipped, the essential script content amounts to roughly 859 bytes of code.
-Without compression it blows up to about 1520 bytes.  Further minifying
-this code does not result in any significant gains (773 vs 859 bytes), it
+Gzipped, the essential script content amounts to roughly 849 bytes of code.
+Without compression it blows up to about 1449 bytes.  Further minifying
+this code does not result in any significant gains (773 vs 849 bytes), it
 would just hinder readability.
 
 ## Why
@@ -58,7 +58,7 @@ can always be improved.  Suggestions are welcome!
 - Legacy support for `$(...)` jQuery riddled synchronous code.
 - Legacy support for loading synchronous Javascript.
 - Single-page-app support using $$(...) page refresh callbacks.
-- Supports IE10 and up and all other webbrowsers.
+- Supports browsers implementing ES2018 and up.
 - No config file, means: no syntax to learn, no config file parser code.
 - No module system: all needed functionality is included already because
   it was/is so small, that writing a module system would take more code
