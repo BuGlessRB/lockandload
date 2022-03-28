@@ -33,7 +33,7 @@ can always be improved.  Suggestions are welcome!
 ## Features
 
 - Zero dependencies.
-- Less filling: 859 bytes of gzipped script content.
+- Less filling: 849 bytes of gzipped script content.
 - Handminified to retain readable and maintainable code.
 - It's so small, it can and should be inlined on your HTML page
   (which is also one of the reasons to handminify it only).
@@ -67,7 +67,7 @@ can always be improved.  Suggestions are welcome!
 
 ## Requirements
 
-It runs inside any webbrowser environment (starting at IE10 and up).
+It runs inside any webbrowser environment (supporting ES2018 and up).
 
 ## Usage
 

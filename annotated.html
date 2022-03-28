@@ -81,11 +81,10 @@
 	//
   W[F]=(d,f)=>f?E(1,d,f):R[d];
       //
-     // Optional support for $(...) and $$(...) shortcuts:
-    //   $$(on every SPA-page switch)
-   //    $(on initial page load)
-  //
+     // $$(on every SPA-page switch)
+    //                            Run per definition if already triggered
   E.S=[0]; W.$$=(f)=>(E.S.push(f),E.S[0]&&f(1));
+  //    $(on initial page load)
   E.Q=[]; W.$=(f)=>E.Q.push(f);
 })(window,document,"require","exports","module",{},{});
  </script>
