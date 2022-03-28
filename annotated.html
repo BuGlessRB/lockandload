@@ -22,7 +22,7 @@
 	//
        // Iterate through dependencies, count and postpone unresolved
       //
-    { for (i of k) if (L[i]||!R[i]) j++, (L[i]=L[i]||[]).push(c);
+    { for (i of k||[]) if (L[i]||!R[i]) j++, (L[i]=L[i]||[]).push(c);
 	       // DEBUG_START
       if (j > 1)
 	console.log("Dependencies left(" + JSON.stringify(n) + ") = " + (j-1));

@@ -1,6 +1,6 @@
 {
   "name": "lockandload",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Minimalist AMD-compliant Javascript and CSS loader",
   "main": "index.html",
   "browser": "index.html",
