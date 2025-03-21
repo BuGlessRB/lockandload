@@ -5,7 +5,7 @@
  <!-- The following <script> *must* stay at the top -->
  <!-- Cut BEGIN for lockandload_master.inc -->
  <script>			  // License: ISC OR GPL-3.0
-((W,D,F,X,M,L,R)=>		 // lockandload v3.1: boilerplate AMD-loader
+((W,D,F,X,M,L,R)=>		 // lockandload v3.2: boilerplate AMD-loader
 { "use strict";			// Copyright (c) 2025 <srb@cuci.nl>
 	   //
 	  // Integrate GTM support to get the timing right
@@ -75,7 +75,7 @@
     j=1; R[n]={}; L[n]=L[n]||[]; c(d=d||[F,X,M]);
   }
 	    // AMD-loader compliance
-  (W.define=E).amd={lockandload:E||"v3.1, Copyright (c) 2025 <srb@cuci.nl>"};
+  (W.define=E).amd={lockandload:E||"v3.2, Copyright (c) 2025 <srb@cuci.nl>"};
 	  //
 	 // Global require()
 	//
@@ -114,9 +114,10 @@
     //
    // Helper function to add new entries at the end of the <head>
   //
-  function n(e,a,v,r,u,p,x,k)
+  function n(e,a,v,r,u,p,x,y,k)
   { k=D.createElement(e); if(p) k.onload=()=>E(p, 1);
     k.fetchPriority="low"; k[a]=v; k[r]=u; x||(k.crossOrigin="");
+    for (x in y) k.setAttribute(x, y[x]);
     D.head.appendChild(k); }
       //
      // css(url): asynchronously load low priority CSS stylesheets
@@ -124,15 +125,17 @@
    //		   the rules have been applied.
   //
   function css(u,p){ n("link","rel","stylesheet","href",u,p); }
-       //
-      // js(url): load Javascript files sequentially in the background
-     //  js(url, "async"): load low priority Javascript files asynchronously
-    //   js(url, "async", 1): like above, but without CORS (e.g. for GTM)
-   //    We attempt to deduplicate for existing earlier entries.
+         //
+        // js(url): load Javascript files sequentially in the background
+       //  js(url, "async"): load low priority Javascript files asynchronously
+      //   js(url, "async", 1): like above, but without CORS (e.g. for GTM)
+     //    js(url, "async", 0, {"data-attr1":"test"}): like the second, but
+    //       with an object-parameter describing a number of attributes.
+   //      We attempt to deduplicate against existing earlier entries.
   //
-  function js(u,a,x)
+  function js(u,a,x,y)
   { if (!D.head.querySelector(`script[src="${u}"]`))
-      n("script","async",a,"src",u,0,x); }
+      n("script","async",a,"src",u,0,x,y); }
      //
     // jsa(alias, path); define aliases for javascript file paths
    //  to be referenced through require.load(alias) to load the file on demand
@@ -212,13 +215,14 @@
   //
   E("jQuery", ["jquery"], ($, i)=>
   { W.jQuery=W.$=$; while (i=E.Q.shift()) $(i); return $; });
-      //
-     // Non-global require()
-    //  require.undef(n) to unload a module prior to reloading it
-   //   require.load(p) to load a javascript file on demand asynchronously
+       //
+      // Non-global require()
+     //  require.undef(n) to unload a module prior to reloading it
+    //   require.load(p, obj) to load a javascript file on demand
+   //     asynchronously, with an optional obj describing extra attributes.
   //
   E(F, ["module"], (R)=>
-   (W[F].undef=(n)=>R[n]=0, W[F].load=(p)=>js(P[p]||p, 1), W[F]));
+   (W[F].undef=(n)=>R[n]=0, W[F].load=(p,y)=>js(P[p]||p, 1, 0, y), W[F]));
      //
     // Define "domready" dependency, it also returns the factory for running
    // the $$(...) scheduled functions: run it in the SPA after page switches.

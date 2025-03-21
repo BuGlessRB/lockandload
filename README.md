@@ -192,12 +192,14 @@ are used verbatim in `<link href="url">` or `<script src="url">` tags:
    Loads low priority ordered css files asynchronously;
    after the stylesheet has been applied, it fulfills the optional
    `id` dependency.
-- `js(url, "async"?, noCORS?)`<br />
+- `js(url, "async"?, noCORS?, attributes?)`<br />
    Loads Javascript file.  If the second optional argument `"async"` is
    provided, the load will be asynchronous.  If the third optional
    argument is true, the script will be loaded without `crossOrigin`
-   parameter (typically needed to load GTM).  We attempt to deduplicate
-   for repeated `js()` calls to the same file.
+   parameter (typically needed to load GTM).
+   The fourth optional `attributes` argument can contain an object that
+   declares a number of attributes that will be set on the element.
+   We attempt to deduplicate for repeated `js()` calls to the same file.
 - `jsa(alias, path)`<br />
    Define aliases for javascript file paths to be referenced through
    `require.load(alias)` to load the file on demand.
@@ -221,11 +223,14 @@ It supports the following functionality:
    `require(id)` before the `require.load()` will return zero, any modules
    using `require(id)` after the `require.load()` will return a reference
    to the exports of the reloaded module.
-- `require.load(file)`<br />
-   Asynchronously loads the referenced javascript file.  To centralise
-   file-location management, it is advisable to use `jsa()` calls in the
-   headready section to declare aliases for javascript files which can
-   be used instead of actual file paths in the `require.load()` calls.
+- `require.load(file, attributes?)`<br />
+   Asynchronously loads the referenced javascript file.
+   The optional `attributes` argument can contain an object that
+   declares a number of attributes that will be set on the element.
+   To centralise file-location management, it is advisable to use
+   `jsa()` calls in the headready section to declare aliases for javascript
+   files which can be used instead of actual file paths in
+   the `require.load()` calls.
 
 ### Dealing with jQuery
 In order to support legacy code that uses inline `$(function(){...})` scattered
