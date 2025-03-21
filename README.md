@@ -196,7 +196,8 @@ are used verbatim in `<link href="url">` or `<script src="url">` tags:
    Loads Javascript file.  If the second optional argument `"async"` is
    provided, the load will be asynchronous.  If the third optional
    argument is true, the script will be loaded without `crossOrigin`
-   parameter (typically needed to load GTM).
+   parameter (typically needed to load GTM).  We attempt to deduplicate
+   for repeated `js()` calls to the same file.
 - `jsa(alias, path)`<br />
    Define aliases for javascript file paths to be referenced through
    `require.load(alias)` to load the file on demand.
